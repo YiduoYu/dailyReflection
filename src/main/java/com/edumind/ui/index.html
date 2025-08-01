@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sentiment Trend Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+</head>
+<body>
+<div id="chart" style="width: 800px; height: 400px;"></div>
+
+<script>
+    fetch("http://localhost:8080/api/evaluation/trend/1234567")
+        .then(response => response.json())
+        .then(result => {
+            if (!result.success) {
+                console.error("The backend returns an error message:", result.message);
+                return;
+            }
+
+            const trendData = result.data || [];
+            console.log("Returned data：", trendData);
+
+            const dates = trendData.map(item => item.date);
+            const scores = trendData.map(item => item.sentimentScore);
+
+            const chart = echarts.init(document.getElementById('chart'));
+            const option = {
+                title: {
+                    text: 'Trends in student emotions'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: dates,
+                    name: 'date'
+                },
+                yAxis: {
+                    type: 'value',
+                    name: 'sentiment score'
+                },
+                series: [
+                    {
+                        data: scores,
+                        type: 'line',
+                        smooth: true,
+                        name: 'sentiment score'
+                    }
+                ]
+            };
+
+            chart.setOption(option);
+        })
+        .catch(error => {
+            console.error("Request failed:", error);
+        });
+</script>
+</body>
+</html>

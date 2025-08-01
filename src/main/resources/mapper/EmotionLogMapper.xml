@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.edumind.mapper.EmotionLogMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="EmotionLogResultMap" type="com.edumind.domain.EmotionLog">
+        <id column="id" property="id"/>
+        <result column="student_id" property="studentId"/>
+        <result column="content" property="content"/>
+        <result column="sentiment" property="sentiment"/>
+        <result column="sentiment_score" property="sentimentScore"/>
+        <result column="suggestion" property="suggestion"/>
+        <result column="log_date" property="logDate"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!-- 插入一条情绪日志 -->
+    <insert id="insertEmotionLog" parameterType="com.edumind.domain.EmotionLog">
+        INSERT INTO emotion_log (
+            student_id,
+            content,
+            sentiment,
+            sentiment_score,
+            suggestion,
+            log_date,
+            create_time
+        ) VALUES (
+                     #{studentId},
+                     #{content},
+                     #{sentiment},
+                     #{sentimentScore},
+                     #{suggestion},
+                     #{logDate},
+                     #{createTime}
+                 )
+    </insert>
+
+    <!-- 插入记录 -->
+    <insert id="insertEvaluation" parameterType="com.edumind.domain.EmotionLog">
+        INSERT INTO emotion_log (
+            student_id, content, sentiment, sentiment_score, suggestion, log_date, create_time
+        ) VALUES (
+                     #{studentId}, #{content}, #{sentiment}, #{sentimentScore}, #{suggestion},
+                     #{logDate}, #{createTime}
+                 )
+    </insert>
+
+<!--    &lt;!&ndash; 判断今天是否已提交 &ndash;&gt;-->
+<!--    <select id="selectTodayByStudent" resultType="com.edumind.domain.EmotionLog">-->
+<!--        SELECT * FROM emotion_log-->
+<!--        WHERE student_id = #{studentId}-->
+<!--          AND log_date = CURRENT_DATE-->
+<!--    </select>-->
+
+    <!-- 查询全部记录 -->
+    <select id="selectAllEvaluations" resultType="com.edumind.domain.EmotionLog">
+        SELECT * FROM emotion_log
+        WHERE student_id = #{studentId}
+        ORDER BY log_date DESC
+    </select>
+
+    <!-- 查询最近一周趋势图数据 -->
+    <select id="selectTrendPointsByStudent" resultType="com.edumind.util.EvaluationTrendPoint">
+        SELECT log_date AS date, sentiment_score AS score
+        FROM emotion_log
+        WHERE student_id = #{studentId}
+        ORDER BY log_date DESC
+            LIMIT 7
+    </select>
+
+    <select id="selectByContentAndStudent"
+            parameterType="map"
+            resultType="com.edumind.domain.EmotionLog">
+        SELECT * FROM emotion_log
+        WHERE student_id = #{studentId} AND content = #{content}
+    </select>
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.edumind.mapper.AuthMapper">
+
+    <!-- 根据 student_id 查询用户（用于登录） -->
+    <select id="selectAuthByAuthId" parameterType="string" resultType="com.edumind.domain.Auth">
+        SELECT * FROM auth
+        WHERE student_id = #{studentId}
+    </select>
+
+    <!-- 根据 email 查询用户（用于注册查重） -->
+    <select id="selectAuthByEmail" parameterType="string" resultType="com.edumind.domain.Auth">
+        SELECT * FROM auth
+        WHERE email = #{email}
+    </select>
+
+    <!-- 查询所有学生账号 -->
+    <select id="selectAllAuhts" resultType="com.edumind.domain.Auth">
+        SELECT * FROM auth
+    </select>
+
+    <!-- 插入新用户（注册） -->
+    <insert id="insertAuth" parameterType="com.edumind.domain.Auth">
+        INSERT INTO auth (student_id, name, password, email, create_time, update_time)
+        VALUES (#{studentId}, #{name}, #{password}, #{email}, #{createTime}, #{updateTime})
+    </insert>
+
+</mapper>
