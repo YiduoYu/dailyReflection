@@ -9,9 +9,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class BaiduNlpService {
 
-    private static final String APP_ID = "***REMOVED***";
-    private static final String API_KEY = "***REMOVED***";
-    private static final String SECRET_KEY = "***REMOVED***";
+    // Credentials are read from environment variables; never commit them.
+    private static final String APP_ID = System.getenv("BAIDU_APP_ID");
+    private static final String API_KEY = System.getenv("BAIDU_API_KEY");
+    private static final String SECRET_KEY = System.getenv("BAIDU_SECRET_KEY");
 
     private static final AipNlp client;
 
